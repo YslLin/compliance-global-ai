@@ -20,4 +20,5 @@ RUN uv pip install -e . --no-cache-dir
 EXPOSE 8000
 
 # Command to run the MCP server
-CMD ["sh", "-c", "uv run cg-mcp"]
+# CMD ["sh", "-c", "uv run cg-mcp"]
+CMD ["sh", "-c", "uv run compliance_global_ai/app.py"]

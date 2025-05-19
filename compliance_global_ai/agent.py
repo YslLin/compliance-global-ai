@@ -148,13 +148,14 @@ def inspect(state: State):
     # 构建提示词，将公司信息融入到提示中
     prompt = f"""
     请根据以下信息进行合规性检查，并明确回答"合规"或"不合规"：
+    只需要检查以下检查项，不要检查其他内容：
     
     公司信息: {json.dumps(state.get('company_info', {}), ensure_ascii=False)}
     当前日期: {datetime.now().strftime('%Y-%m-%d')}
     文档内容: {state.get('content', '')}
     
     检查项:
-    {state['check_list']}
+    {json.dumps(state['check_list'], ensure_ascii=False)}
     
     你的回答必须以"合规"或"不合规"开头，然后说明理由。
     如果不合规，请在说明后列出具体不合规项，每项一行，以"-"开头。

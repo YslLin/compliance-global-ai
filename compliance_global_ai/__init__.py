@@ -1,7 +1,5 @@
-from . import server
-
-
 def main() -> None:
+    from . import server
     """Main entry point for the package."""
     server.main()
 
