@@ -20,4 +20,4 @@ RUN uv pip install -e . --no-cache-dir
 EXPOSE 8000
 
 # Command to run the MCP server
-CMD ["cg-mcp"] 
+CMD ["sh", "-c", "uv run cg-mcp"]
