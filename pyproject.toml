@@ -18,4 +18,4 @@ dependencies = [
     "textract>=1.6.5",
 ]
 [project.scripts]
-cg-mcp = "src:main"
+cg-mcp = "compliance_global_ai:main"
