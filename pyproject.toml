@@ -17,3 +17,5 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "textract>=1.6.5",
 ]
+[project.scripts]
+cg-mcp = "src:main"

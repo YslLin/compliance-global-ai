@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import json
 from mcp.server.fastmcp import FastMCP
+from mcp.server import stdio
 from src import agent
 
 FILE_KEY_CHECK_ITEMS = {
@@ -56,21 +57,17 @@ async def inspect(file_url: str, company_info: dict, check_items: list[str]) -> 
     return json.dumps(result, ensure_ascii=False)
 
 
-if __name__ == "__main__":
-    # 根据需要选择传输方式: "stdio"、"http"或"websocket"
-    # 对于生产环境，推荐使用"http"或"websocket"
-    # import os
-    # port = int(os.environ.get("PORT", 8000))
-    # host = os.environ.get("HOST", "0.0.0.0")
+async def main() -> None:
+    """Main entry point for the package when run as a module."""
+    await mcp.run(transport="stdio")
 
-    # # 使用HTTP传输方式运行服务
-    # mcp.run(transport="http", host=host, port=port)
+
+if __name__ == "__main__":
 
     # 如果要使用stdio方式（适用于本地开发和测试）
     mcp.run(transport="stdio")
 
     # import asyncio
-
     # result = asyncio.run(
     #     inspect(
     #         "1",
