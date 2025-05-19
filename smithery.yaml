@@ -1,0 +1,4 @@
+version: 1
+start:
+  command: ["python", "compliance_global_ai/server.py"]
+  port: 8000

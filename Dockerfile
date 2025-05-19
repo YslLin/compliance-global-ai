@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy files
 COPY pyproject.toml ./
-COPY src ./src
+COPY compliance_global_ai/ ./compliance_global_ai
 
 # Install build dependencies
 RUN pip install --upgrade pip
@@ -14,9 +14,10 @@ RUN pip install uv
 
 # Install the project
 RUN uv sync
+RUN uv pip install -e . --no-cache-dir
 
 # Expose default Sketchup port (if applicable)
-EXPOSE 9876
+EXPOSE 8000
 
 # Command to run the MCP server
 CMD ["cg-mcp"] 

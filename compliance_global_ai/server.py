@@ -1,13 +1,11 @@
 import sys
 import os
-
 # 添加项目根目录到Python路径
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import json
 from mcp.server.fastmcp import FastMCP
-from mcp.server import stdio
-from . import agent
+from compliance_global_ai import agent
 
 FILE_KEY_CHECK_ITEMS = {
     "name_check": '检查文档内容中的"公司名称"是否与公司信息一致',

@@ -55,7 +55,7 @@ def extract_text(state: State):
         # 根据文件类型选择不同的提取方式
         if file_extension in ["jpg", "jpeg", "png", "bmp"]:
             print("正在提取图片文本...")
-            from .ocr import OCRClient
+            from compliance_global_ai.ocr import OCRClient
 
             # 使用OCR提取图片文本
             content = OCRClient.main(file_url)

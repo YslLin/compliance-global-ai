@@ -1,6 +1,7 @@
 """
 ocr 阿里云文字识别
 """
+
 import json
 import os
 import sys
@@ -29,22 +30,22 @@ class OCRClient:
         # 工程代码建议使用更安全的无AK方式，凭据配置方式请参见：https://help.aliyun.com/document_detail/378659.html。
         credential = CredentialClient()
         config = open_api_models.Config(
-            access_key_id=os.environ['OCR_ACCESS_KEY_ID'],
-            access_key_secret=os.environ['OCR_ACCESS_KEY_SECRET']
+            access_key_id=os.environ["OCR_ACCESS_KEY_ID"],
+            access_key_secret=os.environ["OCR_ACCESS_KEY_SECRET"],
         )
         # Endpoint 请参考 https://api.aliyun.com/product/ocr-api
-        config.endpoint = f'ocr-api.cn-hangzhou.aliyuncs.com'
+        config.endpoint = f"ocr-api.cn-hangzhou.aliyuncs.com"
         return ocr_api20210707Client(config)
 
     @staticmethod
-    def main(
-        url: str
-    ) -> None:
+    def main(url: str) -> None:
         client = OCRClient.create_client()
         # 营业执照识别
         # recognize_request = ocr_api_20210707_models.RecognizeBusinessLicenseRequest(url=url)
         # 通用识别
-        recognize_request = ocr_api_20210707_models.RecognizeBusinessLicenseRequest(url=url)
+        recognize_request = ocr_api_20210707_models.RecognizeBusinessLicenseRequest(
+            url=url
+        )
         runtime = util_models.RuntimeOptions()
         try:
             # 营业执照识别
@@ -60,22 +61,22 @@ class OCRClient:
             print(error)
 
     @staticmethod
-    async def main_async(
-        url: str
-    ) -> None:
+    async def main_async(url: str) -> None:
         client = OCRClient.create_client()
-        recognize_business_license_request = ocr_api_20210707_models.RecognizeBusinessLicenseRequest(
-            url=url
+        recognize_business_license_request = (
+            ocr_api_20210707_models.RecognizeBusinessLicenseRequest(url=url)
         )
         runtime = util_models.RuntimeOptions()
         try:
-            await client.recognize_business_license_with_options_async(recognize_business_license_request, runtime)
+            await client.recognize_business_license_with_options_async(
+                recognize_business_license_request, runtime
+            )
         except Exception as error:
             print(error.message)
             print(error.data.get("Recommend"))
             UtilClient.assert_as_string(error.message)
 
 
-if __name__ == '__main__':
-    url = 'https://img0.baidu.com/it/u=980771503,1131783134&fm=253&app=120&f=JPEG?w=500&h=667'
+if __name__ == "__main__":
+    url = "https://img0.baidu.com/it/u=980771503,1131783134&fm=253&app=120&f=JPEG?w=500&h=667"
     OCRClient.main(url)
