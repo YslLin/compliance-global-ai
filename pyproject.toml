@@ -12,6 +12,7 @@ dependencies = [
     "langchain-mcp-adapters>=0.1.0",
     "langchain[openai]>=0.3.25",
     "langgraph>=0.4.5",
+    "loguru>=0.7.3",
     "mcp[cli]>=1.9.0",
     "pypdf2>=3.0.1",
     "python-docx>=1.1.2",
@@ -20,4 +21,5 @@ dependencies = [
     "uvicorn[standard]>=0.34.2",
 ]
 [project.scripts]
-cg-mcp = "compliance_global_ai:main"
+cg-mcp = "cg_ai:server_main"
+cg-api = "cg_ai:api_main"

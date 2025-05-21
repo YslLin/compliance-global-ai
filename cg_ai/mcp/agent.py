@@ -6,10 +6,12 @@ from langgraph.graph import StateGraph
 from langchain.chat_models import init_chat_model
 import urllib.parse
 import os.path
-import httpx
+
+from loguru import logger
 
 MODEL_NAME = os.getenv("MODEL_NAME")
 llm = init_chat_model(MODEL_NAME)
+
 
 class State(MessagesState):
     """流转状态"""
@@ -22,17 +24,9 @@ class State(MessagesState):
     non_compliance_items: list[str] = []  # 存储不合规的具体项
 
 
-class ApiResponse(TypedDict):
-    """API 响应数据模型"""
-
-    code: int
-    msg: str
-    data: Any
-
-
 def extract_text(state: State):
     """1. 提取文本"""
-    print("1. 提取文本")
+    logger.info("1. 提取文本")
     file_url = state["file_url"]
     # 获取文件扩展名 - 修复URL解析
     # 解析URL，移除查询参数
@@ -48,20 +42,20 @@ def extract_text(state: State):
         if not file_extension:
             raise ValueError(f"无法识别的文件类型: {file_url}")
 
-    print(f"解析的文件类型: {file_extension}")
+    logger.info(f"解析的文件类型: {file_extension}")
     content = ""
 
     try:
         # 根据文件类型选择不同的提取方式
         if file_extension in ["jpg", "jpeg", "png", "bmp"]:
-            print("正在提取图片文本...")
-            from compliance_global_ai.ocr import OCRClient
+            logger.info("正在提取图片文本...")
+            from cg_ai.mcp.ocr import OCRClient
 
             # 使用OCR提取图片文本
             content = OCRClient.main(file_url)
 
         elif file_extension == "pdf":
-            print("正在提取PDF文本...")
+            logger.info("正在提取PDF文本...")
             from PyPDF2 import PdfReader
 
             # 使用PDF解析库提取文本
@@ -70,7 +64,7 @@ def extract_text(state: State):
                 content += page.extract_text()
 
         elif file_extension in ["doc", "docx"]:
-            print("正在提取Word文本...")
+            logger.info("正在提取Word文本...")
             if file_extension == "docx":
                 from docx import Document
 
@@ -87,63 +81,16 @@ def extract_text(state: State):
         else:
             raise ValueError(f"不支持的文件类型: {file_extension}")
 
-        print(f"content 类型: {type(content)}, 长度: {len(content)}")
+        logger.info(f"content 类型: {type(content)}, 长度: {len(content)}")
         return {"content": str(content)}
     except Exception as e:
-        print(f"文本提取失败: {str(e)}")
+        logger.error(f"文本提取失败: {str(e)}")
         raise
-
-
-def query_info(state: State):
-    """2. 查询公司信息"""
-    print("2. 查询公司信息")
-    # 从 state 中获取需要的参数
-    company_id = state["company_id"]
-
-    # 构建请求参数
-    params = {"id": company_id}
-
-    # 构建请求头
-    headers = {
-        "Content-Type": "application/json",
-        # "Authorization": f"Bearer {state.get('api_token', '')}"
-    }
-
-    # API 端点
-    api_url = "http://localhost:8893/api/v1/pictureSize/getInfo"
-
-    try:
-        # 使用 httpx 同步方式发送 HTTP 请求
-        with httpx.Client() as client:
-            response = client.post(url=api_url, json=params, headers=headers, timeout=10.0)
-            response.raise_for_status()
-            # 解析响应内容
-            result = response.json()
-            # 使用 Pydantic 模型验证响应数据
-            validated_response = ApiResponse(**result)
-
-            # 处理响应数据
-            if validated_response["code"] != 200:
-                print(validated_response["message"])
-                return None
-
-            # 更新状态
-            company_info = validated_response["data"]
-            print(f"company_info: {company_info}")
-            return {"company_info": company_info}
-    except httpx.HTTPError as e:
-        # 处理 HTTP 错误
-        print(f"HTTP 请求错误: {str(e)}")
-        return None
-    except Exception as e:
-        # 处理其他异常
-        print(f"处理数据时出错: {str(e)}")
-        return None
 
 
 def inspect(state: State):
     """3. 检查合规性"""
-    print("3. 检查合规性")
+    logger.info("3. 检查合规性")
 
     # 构建提示词，将公司信息融入到提示中
     prompt = f"""
@@ -173,7 +120,7 @@ def inspect(state: State):
     response_text = (
         llm_response.content if hasattr(llm_response, "content") else str(llm_response)
     )
-    print(response_text)
+    logger.info(response_text)
 
     # 判断LLM回答是否表示合规
     is_compliant = False
@@ -236,4 +183,4 @@ if __name__ == "__main__":
 
     # 执行图
     result = graph.invoke(state)
-    print(result)
+    logger.info(result)

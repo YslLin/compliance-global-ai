@@ -1,4 +1,4 @@
 version: 1
 start:
-  command: ["uv", "run", "compliance_global_ai/app.py"]
+  command: ["uv", "run", "cg_ai/start.py"]
   port: 8000

@@ -1,3 +1,4 @@
+"""mcp 服务器"""
 import sys
 import os
 # 添加项目根目录到Python路径
@@ -5,8 +6,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 import json
 from mcp.server.fastmcp import FastMCP
-from compliance_global_ai import agent
-
+from cg_ai.mcp import agent
+from loguru import logger
 FILE_KEY_CHECK_ITEMS = {
     "name_check": '检查文档内容中的"公司名称"是否与公司信息一致',
     "valid_period_check": '检查文档内容中的"有效期"是否过期',
@@ -57,15 +58,13 @@ async def inspect(file_url: str, company_info: dict, check_items: list[str]) -> 
 
 def main() -> None:
     """Main entry point for the package when run as a module."""
-    print("使用stdio方式运行")
+    # 如果要使用stdio方式（适用于本地开发和测试）
+    logger.info("使用stdio方式运行")
     mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
-
-    # 如果要使用stdio方式（适用于本地开发和测试）
-    print("111111111 使用stdio方式运行")
-    mcp.run(transport="stdio")
+    main()
 
     # import asyncio
     # result = asyncio.run(

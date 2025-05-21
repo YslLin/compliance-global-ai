@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy files
 COPY pyproject.toml ./
-COPY compliance_global_ai/ ./compliance_global_ai
+COPY cg_ai/ ./cg_ai
 
 # Install build dependencies
 RUN pip install --upgrade pip
@@ -21,4 +21,4 @@ EXPOSE 8000
 
 # Command to run the MCP server
 # CMD ["sh", "-c", "uv run cg-mcp"]
-CMD ["sh", "-c", "uv run compliance_global_ai/app.py"]
+CMD ["sh", "-c", "uv run cg-api"]
