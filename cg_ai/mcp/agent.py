@@ -3,14 +3,14 @@ from typing import Any, TypedDict
 from langgraph.graph import MessagesState
 from datetime import datetime
 from langgraph.graph import StateGraph
-from langchain.chat_models import init_chat_model
+from langgraph.prebuilt import create_react_agent
 import urllib.parse
 import os.path
 
 from loguru import logger
 
 MODEL_NAME = os.getenv("MODEL_NAME")
-llm = init_chat_model(MODEL_NAME)
+llm = create_react_agent("openai:" + MODEL_NAME)
 
 
 class State(MessagesState):

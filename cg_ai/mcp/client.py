@@ -37,7 +37,7 @@ class MCPClient:
 
         self.tools = asyncio.run(self.client.get_tools())
 
-        self.agent = create_react_agent(MODEL_NAME, self.tools)
+        self.agent = create_react_agent("openai:" + MODEL_NAME, self.tools)
 
     def get_tools(self):
         return self.tools
