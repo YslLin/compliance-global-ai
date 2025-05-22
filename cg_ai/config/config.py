@@ -11,18 +11,18 @@ project_description = os.getenv(
 )
 project_version = os.getenv("project_version", "1.0.0")
 
-
-file_check = {
-    "0": ["name_check"],
-    "1": ["name_check", "valid_period_check"],
-}
-
 java_api = {
-    "base_url": "http://localhost:8080",
+    "base_url": os.getenv("java_api_base_url", "http://localhost:8080"),
     # 获取公司信息
     "get_company_info": "/customer/infoById",
     # 获取文件信息
     "get_file_info": "/cus/examine/fileList",
     # 保存合规结果
     "save_compliance_result": "/cus/examine/saveFileResultList",
+}
+
+
+file_check = {
+    "0": ["name_check"],
+    "1": ["name_check", "valid_period_check"],
 }
