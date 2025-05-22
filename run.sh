@@ -1,5 +1,4 @@
 if ! command -v uv &> /dev/null; then
-  pip install --upgrade pip
   curl -LsSf https://astral.sh/uv/install.sh | sh
 
   sudo apt-get update
